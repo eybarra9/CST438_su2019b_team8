@@ -1,5 +1,5 @@
 class GetItem
-
+    # need for create
     include HTTParty
     
     base_uri "http://localhost: 8082"
