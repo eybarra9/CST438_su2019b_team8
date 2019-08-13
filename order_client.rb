@@ -62,6 +62,26 @@ while true
     case input
         when '7' || 'quit'
             break
+
+    when '1'
+            puts 'You want to create a new order. Enter Customer Id, Item Id, and price for the new order:'
+            input = gets.chomp!.split()
+            response = OrderClient.create customerId: input[0], itemId: input[1], price: input[2]
+            puts "status code #{response.code}"
+            puts response.body
+        when 'id'
+            puts 'To look customer by Id, enter id '
+            custId = gets.chomp!
+            response = CustomerClient.getId(custId)
+            puts "status code #{response.code}"
+            puts response
+        when 'email'
+            puts 'To look customer by Email, enter email '
+            customerInput = gets.chomp!
+            response = CustomerClient.getEmail(customerInput)
+            puts "status code #{response.code}"
+            puts response
+            
     end
 end
           
