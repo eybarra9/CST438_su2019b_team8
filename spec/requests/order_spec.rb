@@ -22,41 +22,30 @@ RSpec.describe "OrdersController", type: :request do
 
     end
 
-    it 'Finds item by Item id' do
-        headers = { "CONTENT_TYPE" => "application/json" ,
-                   "ACCEPT" => "application/json"} 
-      
-
-    end
+    it 'retrieve item by id' do 
+      headers =  { "CONTENT_TYPE" => "application/json" ,"ACCEPT" => "application/json"}
+      Item.create('description' => 'gold chain','price' => 250.10 ,'stockQty' => 1 );
+      get "/items/1",  :headers => headers
+      expect(response).to have_http_status(200)
+      items_response = JSON.parse(response.body)
+      expect(items_response['id']).to eq 1
+    end  
  
-    it 'get customerId by Email and returns award' do
-        headers = { "CONTENT_TYPE" => "application/json" ,
-                   "ACCEPT" => "application/json"} 
-
-        
-    end
-    
     it 'cannot find customerId by Email' do
         headers = { "CONTENT_TYPE" => "application/json" ,
                    "ACCEPT" => "application/json"} 
-
+        get '/customers?email=ey@csumb.edu', :headers => headers
+        expect(response).to have_http_status(404)
         
     end
     
-     it 'Finds item by Item id' do
-        headers = { "CONTENT_TYPE" => "application/json" ,
-                   "ACCEPT" => "application/json"} 
-
-
+    it 'orders item that is currently in stock' do
+      headers =  { "CONTENT_TYPE" => "application/json" ,"ACCEPT" => "application/json"}
+      item = Item.create('description' => 'gold chain','price' => 250.10 ,'stockQty' => 7 )
+      order = {id: 1, itemId: item.id  }
+      put "/items/order", :params => order.to_json,  :headers => headers
+      expect(response).to have_http_status(204)      
+      item.reload
+      expect(item.stockQty).to eq 6 
     end
-    
-     it 'Finds item by Item id and returns "Not in stock" ' do
-        headers = { "CONTENT_TYPE" => "application/json" ,
-                   "ACCEPT" => "application/json"} 
-        customer = { 'firstName'=> 'Mercedes','lastName' => 'Garcia', 'email'=> 'mg@csumb.edu'}
-
-
-    end
-    
-=end    
 end 
